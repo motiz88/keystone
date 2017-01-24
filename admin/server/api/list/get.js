@@ -57,7 +57,17 @@ module.exports = function (req, res) {
 				query.sort(sort.string);
 			}
 			query.exec(function (err, items) {
-				next(err, count, items);
+				async.series([
+					function (next) {
+						if (!err && req.list.hasQueryHook('list.get itemsReceivedAsync')) {
+							return req.list.fireQueryHook('list.get itemsReceivedAsync', { items: items }, next);
+						}
+						next(err);
+					},
+					function () {
+						next(err, count, items);
+					},
+				]);
 			});
 		},
 	], function (err, count, items) {
