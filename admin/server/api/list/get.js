@@ -2,6 +2,19 @@ var async = require('async');
 var assign = require('object-assign');
 var listToArray = require('list-to-array');
 
+function combineQueries (a, b) {
+	if (a.$or && b.$or) {
+		if (!a.$and) {
+			a.$and = [];
+		}
+		a.$and.push({ $or: a.$or });
+		delete a.$or;
+		b.$and.push({ $or: b.$or });
+		delete b.$or;
+	}
+	return assign(a, b);
+}
+
 module.exports = function (req, res) {
 	var where = {};
 	var fields = req.query.fields;
@@ -29,6 +42,8 @@ module.exports = function (req, res) {
 	if (req.query.search) {
 		assign(where, req.list.addSearchToQuery(req.query.search));
 	}
+	var hookFilters = req.list.fireQueryHook('list.get getCriteria', { req: req });
+	combineQueries(where, hookFilters || {});
 	var query = req.list.model.find(where);
 	if (req.query.populate) {
 		query.populate(req.query.populate);

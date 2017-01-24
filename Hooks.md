@@ -22,6 +22,8 @@ MyList.queryHooks = {
 MyList.register();
 ```
 
+List hooks are always executed with `this` referring to the current Keystone list.
+
 
 ### `'item.get itemReceivedAsync' (args, done)`
 
@@ -40,3 +42,21 @@ Parameters:
 * done: `( err: ?Error ) => void`
 
 Fired by the `list.get` route handler when a call to `query.exec` has found items and has not produced an error. If this hook is set, it will block further processing until `done` is called.
+
+### `'counts getCriteria' (args)`
+Parameters:
+
+* args: `{ req: Express.Request }`
+
+Return value: `?Object` - Mongoose filter criteria or `undefined`
+
+Fired by the `counts` route handler. Any criteria returned is added to the Mongoose query being constructed.
+
+### `'list.get getCriteria' (args)`
+Parameters:
+
+* args: `{ req: Express.Request }`
+
+Return value: `?Object` - Mongoose filter criteria or `undefined`
+
+Fired by the `list.get` route handler. Any criteria returned is added to the Mongoose query being constructed.

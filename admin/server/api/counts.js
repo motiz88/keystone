@@ -4,7 +4,8 @@ module.exports = function (req, res) {
 	var keystone = req.keystone;
 	var counts = {};
 	async.each(keystone.lists, function (list, next) {
-		list.model.count(function (err, count) {
+		var filter = list.fireQueryHook('counts getCriteria', { req: req });
+		list.model.count(filter || {}, function (err, count) {
 			counts[list.key] = count;
 			next(err);
 		});
