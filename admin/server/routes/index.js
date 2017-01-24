@@ -36,8 +36,8 @@ module.exports = function IndexRoute (req, res) {
 		orphanedLists: orphanedLists,
 		signoutUrl: keystone.get('signout url'),
 		user: {
-			id: req.user.id,
-			name: UserList.getDocumentName(req.user) || '(no name)',
+			id: req.user ? req.user.id : undefined,
+			name: (req.user ? UserList.getDocumentName(req.user) : undefined) || '(no name)',
 		},
 		userList: UserList.key,
 		version: keystone.version,
