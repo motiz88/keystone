@@ -87,6 +87,8 @@ module.exports = function IndexRoute (req, res) {
 		locals.cloudinaryScript = cloudinary.cloudinary_js_config();
 	};
 
+	keystone.callHook('pre:admin-render', { locals: locals, req: req });
+
 	ejs.renderFile(templatePath, locals, {}, function (err, str) {
 		if (err) {
 			console.error('Could not render Admin UI Index Template:', err);
