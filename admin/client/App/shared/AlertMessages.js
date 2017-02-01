@@ -87,7 +87,14 @@ var AlertMessages = React.createClass({
 
 		if (success) {
 			// Render success alerts
-			return <Alert color="success">{upcase(success.success)}</Alert>;
+			return (
+				<Alert color="success">
+					{upcase(success.success)}
+					{success.itemPublicUrl ? <span>{' '}<a href={success.itemPublicUrl} target="actualSite">
+						{success.itemPublicUrlMessage || 'View on site'}
+					</a></span> : null}
+				</Alert>
+			);
 		}
 
 		return null; // No alerts, render nothing

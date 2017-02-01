@@ -148,6 +148,8 @@ var EditForm = React.createClass({
 					alerts: {
 						success: {
 							success: 'Your changes have been saved successfully',
+							itemPublicUrl: list.trampolineUrlPrefix && (list.trampolineUrlPrefix + data.id),
+							itemPublicUrlMessage: `View this ${list.singular.toLowerCase()}`,
 						},
 					},
 					lastValues: this.state.values,
@@ -195,6 +197,22 @@ var EditForm = React.createClass({
 				</div>
 			);
 		}
+	},
+	renderItemLink() {
+		var className = 'EditForm__key-or-id';
+		var list = this.props.list;
+
+		if (list.trampolineUrlPrefix) {
+			return (
+				<div className={className}>
+					<span className="EditForm__key-or-id__label">Link: </span>
+					<a href={list.trampolineUrlPrefix + this.props.data.id} target="actualSite" className="EditForm__key-or-id__field">
+						View this {' ' + this.props.list.singular.toLowerCase()}
+					</a>
+				</div>
+			);
+		}
+		return null;
 	},
 	renderNameField () {
 		var nameField = this.props.list.nameField;
@@ -378,6 +396,7 @@ var EditForm = React.createClass({
 						<Form layout="horizontal" component="div">
 							{this.renderNameField()}
 							{this.renderKeyOrId()}
+							{this.renderItemLink()}
 							{this.renderFormElements()}
 							{this.renderTrackingMeta()}
 						</Form>
